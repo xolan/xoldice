@@ -1,6 +1,8 @@
 XolDice v1.0.0
 --------------
 
+Script for calculating the number of occurrences of a, or all, values given n dice with m sides.
+
 Usage
 =====
 ```
