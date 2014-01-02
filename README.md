@@ -25,8 +25,8 @@ with six (6) sides.
 
 Options
 =======
- * `-V --sort-by-value`      Sort by value if <value> is 'all' (default)
- * `-O --sort-by-outcome`    Sort by outcome if <value> is 'all'
+ * `-V --sort-by-value`      Sort by value if `<value>` is 'all' (default)
+ * `-O --sort-by-outcome`    Sort by outcome if `<value>` is 'all'
  * `-R --reversed`
  * `-h --help`               Show this help
  * `--version`               Show script version
