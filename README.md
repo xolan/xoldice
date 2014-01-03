@@ -6,7 +6,7 @@ Script for calculating the number of occurrences of a, or all, values given n di
 Usage
 =====
 ```
-xoldice.py <num_of_dice> <sides> <value> [(-V | -O) -R]
+xoldice.py <num_of_dice> <sides> <value> [(-V | -O) -R] [-c]
 xoldice.py (-h | --help)
 xoldice.py --version
 ```
@@ -28,10 +28,12 @@ Options
  * `-V --sort-by-value`      Sort by value if `<value>` is 'all' (default)
  * `-O --sort-by-outcome`    Sort by outcome if `<value>` is 'all'
  * `-R --reversed`
+ * `-c`                      Show calculation progress
  * `-h --help`               Show this help
  * `--version`               Show script version
 
 Dependencies
 ============
  * `python`    >= 3.0
- * `docopt`    Tested with version 0.6.1
+ * `clint`     >= 0.3.1
+ * `docopt`    >= 0.6.1

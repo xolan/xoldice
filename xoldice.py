@@ -3,7 +3,7 @@
 XolDice
 
 Usage:
-    xoldice.py <num_of_dice> <sides> <value> [(-V | -O) -R]
+    xoldice.py <num_of_dice> <sides> <value> [(-V | -O) -R] [-c]
     xoldice.py (-h | --help)
     xoldice.py --version
 
@@ -22,14 +22,17 @@ Options:
     -V --sort-by-value      Sort by value if <value> is 'all' (default)
     -O --sort-by-outcome    Sort by outcome if <value> is 'all'
     -R --reversed
+    -c                      Show calculation progress
     -h --help               Show this help
     --version               Show script version
 
 Dependencies:
     python    >= 3.0
-    docopt    Tested with version 0.6.1
+    clint     >= 0.3.1
+    docopt    >= 0.6.1
 '''
 
+from clint.textui import progress
 from docopt import docopt
 from itertools import product
 
@@ -51,13 +54,13 @@ class XolDice:
         except:
             self.num_of_dice = 'ERROR'
             self.has_error = ERROR_DICE_NOT_INT
-            self.exit(ERROR_DICE_NOT_INT)
+            self.printError(ERROR_DICE_NOT_INT)
         try:
             self.sides = int(arguments['<sides>'])
         except:
             self.sides = 'ERROR'
             self.has_error = ERROR_SIDES_NOT_INT
-            self.exit(ERROR_SIDES_NOT_INT)
+            self.printError(ERROR_SIDES_NOT_INT)
         self.value = self.parseValue(arguments['<value>'])
         
         self.main()
@@ -74,7 +77,7 @@ class XolDice:
             except:
                 value = 'ERROR'
                 self.has_error = ERROR_VALUE_NOT_VALID
-                self.exit(ERROR_VALUE_NOT_VALID)
+                self.printError(ERROR_VALUE_NOT_VALID)
                 return value
 
     def createDataStructure(self):
@@ -83,11 +86,14 @@ class XolDice:
 
     def populateLookupWithAll(self):
         products = product([s for s in range(1, self.sides + 1)], repeat=self.num_of_dice)
+        if self.arguments['-c']: print('\nCalculating  : ', end='')
         for p in products:
             outcome = []
+            if self.arguments['-c']: print('.', end='')
             for v in p:
                 outcome.append(v)
             self.lookup[sum(outcome)] += 1
+        if self.arguments['-c']: print('\n')
         return self.lookup
 
     def populateLookup(self):
@@ -116,16 +122,16 @@ class XolDice:
 
         if self.sides != 'ERROR' and self.num_of_dice != 'ERROR':
             if self.value != 'all' and self.value > (self.num_of_dice * self.sides):
-                self.exit(ERROR_VALUE_TOO_HIGH)
+                self.printError(ERROR_VALUE_TOO_HIGH)
                 self.has_error = ERROR_VALUE_TOO_HIGH
             if self.value != 'all' and self.value <= 0:
-                self.exit(ERROR_VALUE_TOO_LOW)
+                self.printError(ERROR_VALUE_TOO_LOW)
                 self.has_error = ERROR_VALUE_TOO_LOW
             if self.num_of_dice <= 1:
-                self.exit(ERROR_DICE_TOO_LOW)
+                self.printError(ERROR_DICE_TOO_LOW)
                 self.has_error = ERROR_DICE_TOO_LOW
             if self.sides < 3:
-                self.exit(ERROR_SIDES_TOO_LOW)
+                self.printError(ERROR_SIDES_TOO_LOW)
                 self.has_error = ERROR_SIDES_TOO_LOW
         if self.has_error != False:
                 self.fail_with_error(self.has_error)
@@ -139,7 +145,7 @@ class XolDice:
         
         self.printResults(outcomes)
 
-    def exit(self, code):
+    def printError(self, code):
         print('Error with status code %d' % code)
         if code == ERROR_VALUE_TOO_HIGH:
             print('Value out of range! It is too high.')
